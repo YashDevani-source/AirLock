@@ -12,6 +12,7 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsx src/index.ts",
+    "receiver": "tsx src/dev-receiver.ts",
     "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest"
