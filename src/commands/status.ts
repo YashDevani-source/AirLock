@@ -13,7 +13,7 @@ export async function statusCommand(): Promise<void> {
   if (user) {
     console.log(`${chalk.bold('Authenticated GitHub User:')} ${chalk.green(`✓ ${user.login}`)}`);
   } else {
-    console.log(`${chalk.bold('Authenticated GitHub User:')} ${chalk.red('✗ Not authenticated')} ${chalk.dim('(Run `mycli login`)')}`);
+    console.log(`${chalk.bold('Authenticated GitHub User:')} ${chalk.red('✗ Not authenticated')} ${chalk.dim('(Run `auto-cicd-cli login`)')}`);
   }
 
   // 2. Repository Configuration
@@ -22,7 +22,7 @@ export async function statusCommand(): Promise<void> {
   if (repo && repo.owner && repo.name) {
     console.log(`${chalk.bold('Selected Repository:')}       ${chalk.cyan(`${repo.owner}/${repo.name}`)}`);
   } else {
-    console.log(`${chalk.bold('Selected Repository:')}       ${chalk.yellow('Not configured')} ${chalk.dim('(Run `mycli setup` or `mycli webhook create`)')}`);
+    console.log(`${chalk.bold('Selected Repository:')}       ${chalk.yellow('Not configured')} ${chalk.dim('(Run `auto-cicd-cli setup` or `auto-cicd-cli webhook create`)')}`);
   }
 
   // 3. VPS Configuration
@@ -32,7 +32,7 @@ export async function statusCommand(): Promise<void> {
     console.log(`${chalk.bold('VPS Host / Domain:')}         ${chalk.white(`${server.host}${portStr}`)}`);
     console.log(`${chalk.bold('Webhook Route:')}             ${chalk.white(server.route)}`);
   } else {
-    console.log(`${chalk.bold('VPS Host / Domain:')}         ${chalk.yellow('Not configured')} ${chalk.dim('(Run `mycli config set-ip <VPS_IP>`)')}`);
+    console.log(`${chalk.bold('VPS Host / Domain:')}         ${chalk.yellow('Not configured')} ${chalk.dim('(Run `auto-cicd-cli config set-ip <VPS_IP>`)')}`);
   }
 
   // 4. Webhook URL
@@ -55,7 +55,7 @@ export async function statusCommand(): Promise<void> {
         );
       } else {
         spinner.warn(
-          `Remote Webhook Status: ${chalk.yellow('Not deployed on GitHub')} ${chalk.dim('(Run `mycli webhook create` to deploy)')}`
+          `Remote Webhook Status: ${chalk.yellow('Not deployed on GitHub')} ${chalk.dim('(Run `auto-cicd-cli webhook create` to deploy)')}`
         );
       }
     } catch (err: unknown) {

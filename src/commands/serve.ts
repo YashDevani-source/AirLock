@@ -19,7 +19,7 @@ export async function serveCommand(options: { port?: string }): Promise<void> {
   const server = config.server;
 
   if (!server || !server.host) {
-    throw new CLIError('No server configuration found. Run "mycli setup" or "mycli config set-ip" first.');
+    throw new CLIError('No server configuration found. Run "auto-cicd-cli setup" or "auto-cicd-cli config set-ip" first.');
   }
 
   const route = normalizeRoute(server.route);

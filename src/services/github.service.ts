@@ -11,7 +11,7 @@ export class GitHubService {
     const creds = configService.getCredentials();
     if (!creds || !creds.accessToken) {
       throw new GitHubAuthError('No GitHub credentials found.', [
-        'Run `mycli login` to authenticate with GitHub first.',
+        'Run `auto-cicd-cli login` to authenticate with GitHub first.',
       ]);
     }
     return new Octokit({ auth: creds.accessToken });

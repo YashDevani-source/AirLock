@@ -18,7 +18,7 @@ export class GitHubAuthError extends CLIError {
       suggestions.length > 0
         ? suggestions
         : [
-            'Run `mycli login` to re-authenticate.',
+            'Run `auto-cicd-cli login` to re-authenticate.',
             'Ensure your GitHub OAuth App has valid permissions.',
             'Check your internet connection.',
           ],
@@ -55,7 +55,7 @@ export class ConfigError extends CLIError {
       message,
       suggestions.length > 0
         ? suggestions
-        : ['Run `mycli setup` to reconfigure your environment.'],
+        : ['Run `auto-cicd-cli setup` to reconfigure your environment.'],
       'CONFIG_ERROR'
     );
   }

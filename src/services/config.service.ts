@@ -138,7 +138,7 @@ export class ConfigService {
   public setBranch(branch: string): RepositoryConfig {
     const config = this.getConfig();
     if (!config.repository) {
-      throw new ConfigError('No repository configured. Run "mycli setup" or select a repository first.');
+      throw new ConfigError('No repository configured. Run "auto-cicd-cli setup" or select a repository first.');
     }
 
     const repository: RepositoryConfig = { ...config.repository, branch };

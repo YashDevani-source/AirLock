@@ -1,0 +1,23 @@
+# Source code (only dist/ ships)
+src/
+tests/
+scripts/
+
+# Config files
+.env
+.env.example
+tsconfig.json
+tsup.config.ts
+.gitignore
+.git/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+*.log
+
+# Dev artifacts
+node_modules/
+coverage/
+.bin/

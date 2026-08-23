@@ -89,7 +89,7 @@ export class AuthService {
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Invalid or expired GitHub token';
       throw new GitHubAuthError(`Token verification failed: ${message}`, [
-        'Run `mycli login` to re-authenticate with GitHub.',
+        'Run `auto-cicd-cli login` to re-authenticate with GitHub.',
       ]);
     }
   }

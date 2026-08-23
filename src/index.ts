@@ -12,11 +12,11 @@ import { CLIError } from './utils/errors.js';
 const program = new Command();
 
 program
-  .name('mycli')
-  .description('Production-ready CLI tool for GitHub authentication and repository webhook setup')
+  .name('auto-cicd-cli')
+  .description('Production-ready CLI tool for GitHub authentication, repository webhook setup, and CI/CD pipeline management')
   .version('1.0.0');
 
-// mycli login
+// auto-cicd-cli login
 program
   .command('login')
   .description('Authenticate with GitHub using OAuth Device Flow')
@@ -24,7 +24,7 @@ program
     await loginCommand();
   });
 
-// mycli setup
+// auto-cicd-cli setup
 program
   .command('setup')
   .description('Run the complete interactive setup wizard')
@@ -32,7 +32,7 @@ program
     await setupCommand();
   });
 
-// mycli status
+// auto-cicd-cli status
 program
   .command('status')
   .description('Display authenticated user, selected repository, VPS configuration, and webhook status')
@@ -40,7 +40,7 @@ program
     await statusCommand();
   });
 
-// mycli logout
+// auto-cicd-cli logout
 program
   .command('logout')
   .description('Remove locally stored authentication credentials securely')
@@ -48,7 +48,7 @@ program
     await logoutCommand();
   });
 
-// mycli serve
+// auto-cicd-cli serve
 program
   .command('serve')
   .description('Start the webhook server that receives and logs GitHub events')
@@ -57,7 +57,7 @@ program
     await serveCommand(options);
   });
 
-// mycli webhook group
+// auto-cicd-cli webhook group
 const webhookGroup = program
   .command('webhook')
   .description('Manage GitHub repository webhooks');
@@ -69,7 +69,7 @@ webhookGroup
     await webhookCreateCommand();
   });
 
-// mycli config group
+// auto-cicd-cli config group
 const configGroup = program
   .command('config')
   .description('Manage local CLI configuration');

@@ -1,6 +1,6 @@
-# GitHub Webhook Automator CLI (`gh-webhook-cli` / `mycli`)
+# Auto CI/CD CLI (`auto-cicd-cli`)
 
-> Production-ready Node.js + TypeScript CLI tool that automates GitHub OAuth authentication (Device Authorization Flow), repository selection, VPS IP/domain and route configuration, and repository webhook management.
+> Production-ready Node.js + TypeScript CLI tool that automates GitHub OAuth authentication (Device Authorization Flow), repository selection, VPS IP/domain and route configuration, repository webhook management, and CI/CD pipeline setup.
 
 ---
 
@@ -32,20 +32,20 @@
 ### Global Installation
 
 ```bash
-npm install -g gh-webhook-cli
+npm install -g auto-cicd-cli
 ```
 
 Or clone and build locally:
 
 ```bash
-git clone https://github.com/your-username/auto-dep.git
-cd auto-dep
+git clone https://github.com/YashDevani-source/AirLock.git
+cd AirLock
 npm install
 npm run build
 npm link
 ```
 
-Now you can use `mycli` or `gh-webhook-cli` directly in your terminal.
+Now you can use `auto-cicd-cli` directly in your terminal.
 
 ---
 
@@ -74,7 +74,7 @@ GITHUB_CLIENT_ID=your_oauth_app_client_id
 ### 1. Complete Interactive Setup Wizard
 
 ```bash
-mycli setup
+auto-cicd-cli setup
 ```
 
 Guides you step-by-step through authentication, repository selection, VPS IP/domain input, route normalization, and automated webhook creation.
@@ -104,25 +104,25 @@ Interactively selects a repository, configures VPS server IP/domain, route, prot
 Save VPS IP or domain name:
 
 ```bash
-mycli config set-ip 123.45.67.89
+auto-cicd-cli config set-ip 123.45.67.89
 ```
 
 Or with a domain name:
 
 ```bash
-mycli config set-ip server.example.com
+auto-cicd-cli config set-ip server.example.com
 ```
 
 Save webhook route path:
 
 ```bash
-mycli config set-route /github-webhook
+auto-cicd-cli config set-route /github-webhook
 ```
 
 ### 5. Check CLI Status
 
 ```bash
-mycli status
+auto-cicd-cli status
 ```
 
 Displays:
@@ -135,7 +135,7 @@ Displays:
 ### 6. Logout & Secure Wipe
 
 ```bash
-mycli logout
+auto-cicd-cli logout
 ```
 
 Removes local GitHub authentication tokens securely.
