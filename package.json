@@ -14,6 +14,7 @@
     "dev": "tsx src/index.ts",
     "receiver": "tsx src/dev-receiver.ts",
     "receiver:restart": "node scripts/restart-receiver.mjs",
+    "server": "tsx src/index.ts serve",
     "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest"

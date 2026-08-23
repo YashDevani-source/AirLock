@@ -1,0 +1,79 @@
+import { createServer } from 'node:http';
+import { createHmac, timingSafeEqual } from 'node:crypto';
+import chalk from 'chalk';
+import { configService } from '../services/config.service.js';
+import { normalizeRoute } from '../utils/url.js';
+import { CLIError } from '../utils/errors.js';
+
+function verifySignature(payload: string, signature: string | undefined, secret: string): boolean {
+  if (!signature || !signature.startsWith('sha256=')) return false;
+  const expected = 'sha256=' + createHmac('sha256', secret).update(payload).digest('hex');
+  const a = Buffer.from(signature);
+  const b = Buffer.from(expected);
+  return a.length === b.length && timingSafeEqual(a, b);
+}
+
+export async function serveCommand(options: { port?: string }): Promise<void> {
+  const config = configService.getConfig();
+  const server = config.server;
+
+  if (!server || !server.host) {
+    throw new CLIError('No server configuration found. Run "mycli setup" or "mycli config set-ip" first.');
+  }
+
+  const route = normalizeRoute(server.route);
+  const secret = configService.getWebhookSecret();
+  const port = Number(options.port) || server.port || (server.protocol === 'https' ? 443 : 80);
+
+  console.log(chalk.bold.magenta('\n🚀 Starting webhook server\n'));
+  console.log(chalk.dim(`   route:  ${route}`));
+  console.log(chalk.dim(`   port:   ${port}`));
+  console.log(chalk.dim(`   secret: ${secret ? 'configured' : 'not set (signatures will not be verified)'}\n`));
+
+  const httpServer = createServer((req, res) => {
+    const chunks: Buffer[] = [];
+    req.on('data', (chunk) => chunks.push(chunk));
+    req.on('end', () => {
+      const body = Buffer.concat(chunks).toString('utf8');
+
+      console.log(chalk.bold.blue(`\n--> ${req.method} ${req.url}`));
+
+      if (req.url !== route) {
+        console.log(chalk.red(`    no route configured for ${req.url}`));
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'not found' }));
+        return;
+      }
+
+      const event = req.headers['x-github-event'] ?? '(no event header)';
+      const delivery = req.headers['x-github-delivery'] ?? '(no delivery id)';
+      const signature = req.headers['x-hub-signature-256'] as string | undefined;
+
+      console.log(chalk.dim(`    event: ${event}  delivery: ${delivery}`));
+
+      if (secret) {
+        const valid = verifySignature(body, signature, secret);
+        console.log(valid ? chalk.green('    signature: valid') : chalk.red('    signature: INVALID'));
+        if (!valid) {
+          res.writeHead(401, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'invalid signature' }));
+          return;
+        }
+      }
+
+      try {
+        console.log(JSON.stringify(JSON.parse(body), null, 2));
+      } catch {
+        console.log(body);
+      }
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true }));
+    });
+  });
+
+  httpServer.listen(port, () => {
+    console.log(chalk.bold.green(`Webhook server listening on http://0.0.0.0:${port}${route}`));
+    console.log(chalk.dim('Waiting for GitHub events... (Ctrl+C to stop)'));
+  });
+}

@@ -5,6 +5,7 @@ import { statusCommand } from './commands/status.js';
 import { setIpCommand, setRouteCommand, setPortCommand } from './commands/config.js';
 import { webhookCreateCommand } from './commands/webhook.js';
 import { setupCommand } from './commands/setup.js';
+import { serveCommand } from './commands/serve.js';
 import { logger } from './utils/logger.js';
 import { CLIError } from './utils/errors.js';
 
@@ -45,6 +46,15 @@ program
   .description('Remove locally stored authentication credentials securely')
   .action(async () => {
     await logoutCommand();
+  });
+
+// mycli serve
+program
+  .command('serve')
+  .description('Start the webhook server that receives and logs GitHub events')
+  .option('-p, --port <port>', 'Port to listen on (overrides saved config)')
+  .action(async (options: { port?: string }) => {
+    await serveCommand(options);
   });
 
 // mycli webhook group
