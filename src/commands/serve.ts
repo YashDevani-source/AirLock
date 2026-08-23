@@ -1,6 +1,7 @@
 import { createServer } from 'node:http';
 import { createHmac, timingSafeEqual } from 'node:crypto';
 import chalk from 'chalk';
+import killPort from 'kill-port';
 import { configService } from '../services/config.service.js';
 import { normalizeRoute } from '../utils/url.js';
 import { CLIError } from '../utils/errors.js';
@@ -72,8 +73,17 @@ export async function serveCommand(options: { port?: string }): Promise<void> {
     });
   });
 
-  httpServer.listen(port, () => {
+  httpServer.on('listening', () => {
     console.log(chalk.bold.green(`Webhook server listening on http://0.0.0.0:${port}${route}`));
     console.log(chalk.dim('Waiting for GitHub events... (Ctrl+C to stop)'));
   });
+
+  httpServer.once('error', async (err: NodeJS.ErrnoException) => {
+    if (err.code !== 'EADDRINUSE') throw err;
+    console.log(chalk.yellow(`Port ${port} is already in use, freeing it...`));
+    await killPort(port, 'tcp');
+    httpServer.listen(port);
+  });
+
+  httpServer.listen(port);
 }
