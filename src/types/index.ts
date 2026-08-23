@@ -34,6 +34,7 @@ export interface ServerConfig {
 export interface RepositoryConfig {
   owner: string;
   name: string;
+  branch?: string;
 }
 
 export interface CLIConfig {

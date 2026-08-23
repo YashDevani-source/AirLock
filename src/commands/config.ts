@@ -1,5 +1,5 @@
 import { configService } from '../services/config.service.js';
-import { hostSchema, routeSchema, portSchema } from '../config/schema.js';
+import { hostSchema, routeSchema, portSchema, branchSchema } from '../config/schema.js';
 import { buildWebhookUrl } from '../utils/url.js';
 import { logger } from '../utils/logger.js';
 import { CLIError } from '../utils/errors.js';
@@ -75,6 +75,27 @@ export async function setPortCommand(portInput: string): Promise<void> {
     } else {
       const msg = err instanceof Error ? err.message : String(err);
       logger.error(`Failed to set port: ${msg}`);
+    }
+    process.exitCode = 1;
+  }
+}
+
+export async function setBranchCommand(branch: string): Promise<void> {
+  try {
+    const parseResult = branchSchema.safeParse(branch);
+    if (!parseResult.success) {
+      const msg = parseResult.error.errors[0]?.message || 'Invalid branch name.';
+      throw new CLIError(`Invalid branch "${branch}": ${msg}`);
+    }
+
+    const repository = configService.setBranch(parseResult.data);
+    logger.success(`Saved deploy branch: ${repository.branch}`);
+  } catch (err: unknown) {
+    if (err instanceof CLIError) {
+      logger.error(err);
+    } else {
+      const msg = err instanceof Error ? err.message : String(err);
+      logger.error(`Failed to set branch: ${msg}`);
     }
     process.exitCode = 1;
   }

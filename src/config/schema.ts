@@ -35,9 +35,12 @@ export const serverConfigSchema = z.object({
   route: routeSchema,
 });
 
+export const branchSchema = z.string().trim().min(1, 'Branch name cannot be empty.');
+
 export const repositoryConfigSchema = z.object({
   owner: z.string().trim().min(1, 'Repository owner is required.'),
   name: z.string().trim().min(1, 'Repository name is required.'),
+  branch: branchSchema.optional(),
 });
 
 export const cliConfigSchema = z.object({

@@ -2,7 +2,7 @@ import { Command } from 'commander';
 import { loginCommand } from './commands/login.js';
 import { logoutCommand } from './commands/logout.js';
 import { statusCommand } from './commands/status.js';
-import { setIpCommand, setRouteCommand, setPortCommand, clearSecretCommand } from './commands/config.js';
+import { setIpCommand, setRouteCommand, setPortCommand, clearSecretCommand, setBranchCommand } from './commands/config.js';
 import { webhookCreateCommand } from './commands/webhook.js';
 import { setupCommand } from './commands/setup.js';
 import { serveCommand } from './commands/serve.js';
@@ -87,6 +87,14 @@ configGroup
   .description('Remove the saved webhook secret (signatures will no longer be verified)')
   .action(async () => {
     await clearSecretCommand();
+  });
+
+configGroup
+  .command('set-branch')
+  .argument('<branch>', 'Branch name to trigger deploy script on push (e.g. main)')
+  .description('Save the branch that push events must target to run the deploy script')
+  .action(async (branch: string) => {
+    await setBranchCommand(branch);
   });
 
 configGroup

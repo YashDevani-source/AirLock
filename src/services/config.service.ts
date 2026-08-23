@@ -135,6 +135,17 @@ export class ConfigService {
     this.saveConfig({ repository });
   }
 
+  public setBranch(branch: string): RepositoryConfig {
+    const config = this.getConfig();
+    if (!config.repository) {
+      throw new ConfigError('No repository configured. Run "mycli setup" or select a repository first.');
+    }
+
+    const repository: RepositoryConfig = { ...config.repository, branch };
+    this.saveConfig({ repository });
+    return repository;
+  }
+
   public setUsername(username: string): void {
     this.saveConfig({ github: { username } });
   }

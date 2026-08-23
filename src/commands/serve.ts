@@ -25,10 +25,12 @@ export async function serveCommand(options: { port?: string }): Promise<void> {
   const route = normalizeRoute(server.route);
   const secret = configService.getWebhookSecret();
   const port = Number(options.port) || server.port || (server.protocol === 'https' ? 443 : 80);
+  const deployBranch = config.repository?.branch || 'main';
 
   console.log(chalk.bold.magenta('\n🚀 Starting webhook server\n'));
   console.log(chalk.dim(`   route:  ${route}`));
   console.log(chalk.dim(`   port:   ${port}`));
+  console.log(chalk.dim(`   branch: ${deployBranch} (push here runs the deploy script)`));
   console.log(chalk.dim(`   secret: ${secret ? 'configured' : 'not set (signatures will not be verified)'}\n`));
 
   const httpServer = createServer((req, res) => {
@@ -62,10 +64,21 @@ export async function serveCommand(options: { port?: string }): Promise<void> {
         }
       }
 
+      let payload: Record<string, unknown> | undefined;
       try {
-        console.log(JSON.stringify(JSON.parse(body), null, 2));
+        payload = JSON.parse(body);
+        console.log(JSON.stringify(payload, null, 2));
       } catch {
         console.log(body);
+      }
+
+      if (event === 'push' && payload && typeof payload.ref === 'string') {
+        const pushedBranch = payload.ref.replace('refs/heads/', '');
+        if (pushedBranch === deployBranch) {
+          console.log(chalk.bold.green(`\n>>> Push to '${deployBranch}' detected — deploy script hit!`));
+        } else {
+          console.log(chalk.dim(`    push to '${pushedBranch}' ignored (watching '${deployBranch}')`));
+        }
       }
 
       res.writeHead(200, { 'Content-Type': 'application/json' });
