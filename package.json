@@ -1,6 +1,6 @@
 {
   "name": "auto-cicd-cli",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Production-ready CLI tool automating GitHub authentication, repository webhook setup, and CI/CD pipeline management",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
