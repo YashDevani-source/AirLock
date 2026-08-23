@@ -130,6 +130,8 @@ export async function promptServerConfig(): Promise<{ server: ServerConfig; webh
     if (webhookSecret.trim()) {
       configService.saveWebhookSecret(webhookSecret.trim());
     }
+  } else {
+    configService.clearWebhookSecret();
   }
 
   return { server, webhookSecret };

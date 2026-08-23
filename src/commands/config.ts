@@ -80,6 +80,11 @@ export async function setPortCommand(portInput: string): Promise<void> {
   }
 }
 
+export async function clearSecretCommand(): Promise<void> {
+  configService.clearWebhookSecret();
+  logger.success('Cleared saved webhook secret. Signatures will no longer be verified.');
+}
+
 export async function setRouteCommand(route: string): Promise<void> {
   try {
     const parseResult = routeSchema.safeParse(route);

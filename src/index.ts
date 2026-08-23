@@ -2,7 +2,7 @@ import { Command } from 'commander';
 import { loginCommand } from './commands/login.js';
 import { logoutCommand } from './commands/logout.js';
 import { statusCommand } from './commands/status.js';
-import { setIpCommand, setRouteCommand, setPortCommand } from './commands/config.js';
+import { setIpCommand, setRouteCommand, setPortCommand, clearSecretCommand } from './commands/config.js';
 import { webhookCreateCommand } from './commands/webhook.js';
 import { setupCommand } from './commands/setup.js';
 import { serveCommand } from './commands/serve.js';
@@ -80,6 +80,13 @@ configGroup
   .description('Save the VPS public IP address or domain')
   .action(async (vpsIp: string) => {
     await setIpCommand(vpsIp);
+  });
+
+configGroup
+  .command('clear-secret')
+  .description('Remove the saved webhook secret (signatures will no longer be verified)')
+  .action(async () => {
+    await clearSecretCommand();
   });
 
 configGroup
