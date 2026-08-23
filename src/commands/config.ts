@@ -1,5 +1,5 @@
 import { configService } from '../services/config.service.js';
-import { hostSchema, routeSchema } from '../config/schema.js';
+import { hostSchema, routeSchema, portSchema } from '../config/schema.js';
 import { buildWebhookUrl } from '../utils/url.js';
 import { logger } from '../utils/logger.js';
 import { CLIError } from '../utils/errors.js';
@@ -33,6 +33,48 @@ export async function setIpCommand(vpsIp: string): Promise<void> {
     } else {
       const msg = err instanceof Error ? err.message : String(err);
       logger.error(`Failed to set VPS IP: ${msg}`);
+    }
+    process.exitCode = 1;
+  }
+}
+
+export async function setPortCommand(portInput: string): Promise<void> {
+  try {
+    const trimmed = portInput.trim();
+    let port: number | null = null;
+
+    if (trimmed && trimmed.toLowerCase() !== 'none') {
+      const num = Number(trimmed);
+      const parseResult = portSchema.safeParse(num);
+      if (!parseResult.success || Number.isNaN(num)) {
+        const msg = parseResult.error?.errors[0]?.message || 'Invalid port number.';
+        throw new CLIError(`Invalid port "${portInput}": ${msg}`, [
+          'Enter a port number between 1 and 65535 (e.g. 3000).',
+          'Pass "none" to clear a previously configured port and use the protocol default.',
+        ]);
+      }
+      port = num;
+    }
+
+    const server = configService.setPort(port);
+
+    logger.success(port === null ? 'Cleared custom port (using protocol default).' : `Saved port: ${server.port}`);
+
+    if (server.host) {
+      const webhookUrl = buildWebhookUrl(
+        server.protocol,
+        server.host,
+        server.port,
+        server.route
+      );
+      logger.info(`Updated generated Webhook URL: ${webhookUrl}`);
+    }
+  } catch (err: unknown) {
+    if (err instanceof CLIError) {
+      logger.error(err);
+    } else {
+      const msg = err instanceof Error ? err.message : String(err);
+      logger.error(`Failed to set port: ${msg}`);
     }
     process.exitCode = 1;
   }

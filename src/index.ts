@@ -2,7 +2,7 @@ import { Command } from 'commander';
 import { loginCommand } from './commands/login.js';
 import { logoutCommand } from './commands/logout.js';
 import { statusCommand } from './commands/status.js';
-import { setIpCommand, setRouteCommand } from './commands/config.js';
+import { setIpCommand, setRouteCommand, setPortCommand } from './commands/config.js';
 import { webhookCreateCommand } from './commands/webhook.js';
 import { setupCommand } from './commands/setup.js';
 import { logger } from './utils/logger.js';
@@ -78,6 +78,14 @@ configGroup
   .description('Save the webhook route path')
   .action(async (route: string) => {
     await setRouteCommand(route);
+  });
+
+configGroup
+  .command('set-port')
+  .argument('<port>', 'Custom port your server listens on (1-65535), or "none" to clear it')
+  .description('Save a custom port for the webhook URL (needed when your server is not on the protocol default port)')
+  .action(async (port: string) => {
+    await setPortCommand(port);
   });
 
 // Global unhandled error handler

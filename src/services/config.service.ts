@@ -103,6 +103,20 @@ export class ConfigService {
     return currentServer;
   }
 
+  public setPort(port: number | null): ServerConfig {
+    const config = this.getConfig();
+    const currentServer: ServerConfig = config.server || {
+      protocol: 'http',
+      host: '',
+      port: null,
+      route: '/github-webhook',
+    };
+
+    currentServer.port = port;
+    this.saveConfig({ server: currentServer });
+    return currentServer;
+  }
+
   public setWebhookRoute(route: string): ServerConfig {
     const config = this.getConfig();
     const currentServer: ServerConfig = config.server || {
